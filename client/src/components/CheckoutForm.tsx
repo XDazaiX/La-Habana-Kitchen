@@ -23,7 +23,7 @@ export interface OrderDetails {
   notes: string;
 }
 
-const DELIVERY_FEE = 3.99;
+const DELIVERY_FEE = 500;
 
 export default function CheckoutForm({ isOpen, onClose, onBack, items, onConfirm }: CheckoutFormProps) {
   const [formData, setFormData] = useState<OrderDetails>({
@@ -149,21 +149,21 @@ export default function CheckoutForm({ isOpen, onClose, onBack, items, onConfirm
                     <span>
                       {item.quantity}x {item.product.name}
                     </span>
-                    <span>${(item.product.price * item.quantity).toFixed(2)}</span>
+                    <span>{(item.product.price * item.quantity).toLocaleString()} CUP</span>
                   </div>
                 ))}
                 <Separator />
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{subtotal.toLocaleString()} CUP</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Envío</span>
-                  <span>${DELIVERY_FEE.toFixed(2)}</span>
+                  <span>{DELIVERY_FEE.toLocaleString()} CUP</span>
                 </div>
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
-                  <span data-testid="text-checkout-total">${total.toFixed(2)}</span>
+                  <span data-testid="text-checkout-total">{total.toLocaleString()} CUP</span>
                 </div>
               </div>
 

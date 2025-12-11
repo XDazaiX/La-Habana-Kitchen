@@ -17,7 +17,7 @@ interface CartProps {
   onCheckout: () => void;
 }
 
-const DELIVERY_FEE = 3.99;
+const DELIVERY_FEE = 500;
 
 export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheckout }: CartProps) {
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -64,7 +64,7 @@ export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheck
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium truncate">{item.product.name}</h4>
                       <p className="text-muted-foreground text-sm">
-                        ${item.product.price.toFixed(2)}
+                        {item.product.price.toLocaleString()} CUP
                       </p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
@@ -90,7 +90,7 @@ export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheck
                     </div>
                     <div className="text-right">
                       <span className="font-medium">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        {(item.product.price * item.quantity).toLocaleString()} CUP
                       </span>
                     </div>
                   </div>
@@ -101,16 +101,16 @@ export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheck
             <div className="p-4 border-t space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span data-testid="text-subtotal">${subtotal.toFixed(2)}</span>
+                <span data-testid="text-subtotal">{subtotal.toLocaleString()} CUP</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Envío a domicilio</span>
-                <span data-testid="text-delivery">${DELIVERY_FEE.toFixed(2)}</span>
+                <span data-testid="text-delivery">{DELIVERY_FEE.toLocaleString()} CUP</span>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold text-lg">
                 <span>Total</span>
-                <span data-testid="text-total">${total.toFixed(2)}</span>
+                <span data-testid="text-total">{total.toLocaleString()} CUP</span>
               </div>
               <Button className="w-full" size="lg" onClick={onCheckout} data-testid="button-checkout">
                 Proceder al Pago

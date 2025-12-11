@@ -157,7 +157,7 @@ export default function Home() {
           >
             <span>Ver Carrito ({cartItemCount})</span>
             <span>
-              ${cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2)}
+              {cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toLocaleString()} CUP
             </span>
           </button>
         </div>

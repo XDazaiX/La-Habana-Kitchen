@@ -38,7 +38,7 @@ export default function ProductCard({ product, quantity, onAdd, onRemove }: Prod
         </p>
         <div className="flex items-center justify-between gap-2 mt-4">
           <span className="font-semibold text-lg" data-testid={`text-product-price-${product.id}`}>
-            ${product.price.toFixed(2)}
+            {product.price.toLocaleString()} CUP
           </span>
           {quantity === 0 ? (
             <Button onClick={onAdd} data-testid={`button-add-${product.id}`}>

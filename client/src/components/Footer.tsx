@@ -20,11 +20,15 @@ export default function Footer() {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span data-testid="text-phone">(305) 555-0123</span>
+                <span data-testid="text-phone">+53 56649997</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span data-testid="text-address">Calle 8, Little Havana, Miami FL</span>
+                <Phone className="h-4 w-4" />
+                <span>+53 59609237</span>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Phone className="h-4 w-4" />
+                <span>+53 56382361</span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="h-4 w-4" />
@@ -36,8 +40,7 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Zona de Entrega</h4>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Entregamos en Little Havana, Coral Gables, Coconut Grove, Brickell y Downtown Miami.
-              Envío gratis en pedidos mayores a $50.
+              Entregamos a cualquier parte de La Habana.
             </p>
           </div>
         </div>
