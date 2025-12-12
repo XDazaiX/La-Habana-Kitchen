@@ -53,7 +53,22 @@ export default function CheckoutForm({ isOpen, onClose, onBack, items, onConfirm
   }, [isOpen]);
 
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const total = subtotal + DELIVERY_FEE;
+  const hasCombo = ["principales", "acompanantes", "bebidas"].every((category) =>
+    items.some((item) => item.product.category === category),
+  );
+  const comboDiscount = hasCombo ? Math.round(subtotal * 0.12) : 0;
+  const total = subtotal - comboDiscount + DELIVERY_FEE;
+
+  // Reset flujo cuando se abre de nuevo el checkout, para evitar saltar directamente a confirmado
+  // useLayoutEffect evita parpadeo de la vista de éxito al reabrir
+  useLayoutEffect(() => {
+    if (isOpen) {
+      setStep("form");
+      setPaymentMethod(null);
+      setOrderNumber("");
+      setFormData(initialForm);
+    }
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -238,6 +253,12 @@ export default function CheckoutForm({ isOpen, onClose, onBack, items, onConfirm
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>{subtotal.toLocaleString()} CUP</span>
                 </div>
+                {comboDiscount > 0 && (
+                  <div className="flex justify-between text-sm text-green-600 font-medium">
+                    <span>Descuento Combo Habana (12%)</span>
+                    <span>-{comboDiscount.toLocaleString()} CUP</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Envío</span>
                   <span>{DELIVERY_FEE.toLocaleString()} CUP</span>

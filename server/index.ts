@@ -85,10 +85,12 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
-  // Windows no soporta reusePort ni a veces 0.0.0.0; ajustamos para evitar ENOTSUP.
+  // En producción (hosting) siempre usar 0.0.0.0 para aceptar conexiones externas
+  // En desarrollo local Windows usar 127.0.0.1 para evitar ENOTSUP
+  const isProduction = process.env.NODE_ENV === "production";
   const isWindows = process.platform === "win32";
-  const host = isWindows ? "127.0.0.1" : "0.0.0.0";
-  const reusePort = isWindows ? false : true;
+  const host = isProduction ? "0.0.0.0" : (isWindows ? "127.0.0.1" : "0.0.0.0");
+  const reusePort = isProduction ? false : (isWindows ? false : true);
 
   httpServer.listen(
     {

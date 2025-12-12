@@ -1,8 +1,9 @@
-import { X, Plus, Minus, ShoppingBag } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { Product } from "./ProductCard";
+import { products } from "@/data/products";
 
 export interface CartItem {
   product: Product;
@@ -21,7 +22,17 @@ const DELIVERY_FEE = 500;
 
 export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheckout }: CartProps) {
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const total = subtotal > 0 ? subtotal + DELIVERY_FEE : 0;
+  const hasCombo = ["principales", "acompanantes", "bebidas"].every((category) =>
+    items.some((item) => item.product.category === category),
+  );
+  const comboDiscount = hasCombo ? Math.round(subtotal * 0.12) : 0;
+  const total = subtotal > 0 ? subtotal - comboDiscount + DELIVERY_FEE : 0;
+
+  // Sugerencias (upsell) priorizando postres/bebidas que no estén ya en el carrito
+  const recommended = products
+    .filter((p) => ["postres", "bebidas"].includes(p.category))
+    .filter((p) => !items.find((item) => item.product.id === p.id))
+    .slice(0, 2);
 
   if (!isOpen) return null;
 
@@ -99,10 +110,43 @@ export default function Cart({ isOpen, onClose, items, onUpdateQuantity, onCheck
             </ScrollArea>
 
             <div className="p-4 border-t space-y-3">
+              {recommended.length > 0 && (
+                <div className="rounded-md border p-3 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-semibold">Antojos que combinan</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {recommended.map((rec) => (
+                      <div key={rec.id} className="flex items-center justify-between gap-3 text-sm">
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{rec.name}</p>
+                          <p className="text-muted-foreground">{rec.price.toLocaleString()} CUP</p>
+                        </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => onUpdateQuantity(rec.id, 1)}
+                          data-testid={`upsell-add-${rec.id}`}
+                        >
+                          Añadir
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span data-testid="text-subtotal">{subtotal.toLocaleString()} CUP</span>
               </div>
+              {comboDiscount > 0 && (
+                <div className="flex justify-between text-sm text-green-600 font-medium">
+                  <span>Descuento Combo Habana (12%)</span>
+                  <span>-{comboDiscount.toLocaleString()} CUP</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Envío a domicilio</span>
                 <span data-testid="text-delivery">{DELIVERY_FEE.toLocaleString()} CUP</span>

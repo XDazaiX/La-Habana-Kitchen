@@ -1,4 +1,4 @@
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -18,16 +18,24 @@ interface ProductCardProps {
   onRemove: () => void;
 }
 
+const TOP_SELLER_IDS = new Set(["ropa-vieja", "lechon-asado", "tres-leches"]);
+
 export default function ProductCard({ product, quantity, onAdd, onRemove }: ProductCardProps) {
   return (
     <Card className="overflow-hidden hover-elevate" data-testid={`card-product-${product.id}`}>
-      <div className="aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover"
           data-testid={`img-product-${product.id}`}
         />
+        {TOP_SELLER_IDS.has(product.id) && (
+          <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-[11px] text-white">
+            <Star className="h-3 w-3 text-yellow-300" />
+            Top ventas
+          </div>
+        )}
       </div>
       <CardContent className="p-4">
         <h3 className="font-serif font-semibold text-lg" data-testid={`text-product-name-${product.id}`}>
